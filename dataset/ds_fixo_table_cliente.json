@@ -2,7 +2,7 @@
 	"name": "ds_fixo_table_cliente",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "ls_azure_sql_datatabase",
+			"referenceName": "ls_azure_sql_database_powerquery",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
