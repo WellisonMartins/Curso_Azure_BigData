@@ -1,0 +1,9 @@
+{
+	"name": "adf-wellison-martins",
+	"location": "eastus2",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "cc15c81a-d757-4fac-968c-c7b9cba7f793",
+		"tenantId": "673fafe4-6e19-4011-b7f2-ec64cd118814"
+	}
+}
