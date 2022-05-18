@@ -1,0 +1,12 @@
+{
+	"name": "ls_api_new_york_times",
+	"properties": {
+		"annotations": [],
+		"type": "HttpServer",
+		"typeProperties": {
+			"url": "https://api.nytimes.com/svc/movies/v2/",
+			"enableServerCertificateValidation": true,
+			"authenticationType": "Anonymous"
+		}
+	}
+}
