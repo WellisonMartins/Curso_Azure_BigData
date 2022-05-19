@@ -83,7 +83,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Filter_txt').output.values",
+						"value": "@activity('Filter_txt').output.value",
 						"type": "Expression"
 					},
 					"batchCount": 5,
