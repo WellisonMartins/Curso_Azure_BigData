@@ -1,0 +1,24 @@
+{
+	"name": "TR_CALEND",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "TRIGGER_SCHEDULE",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "ScheduleTrigger",
+		"typeProperties": {
+			"recurrence": {
+				"frequency": "Minute",
+				"interval": 15,
+				"startTime": "2022-05-18T20:20:00",
+				"timeZone": "E. South America Standard Time"
+			}
+		}
+	}
+}
