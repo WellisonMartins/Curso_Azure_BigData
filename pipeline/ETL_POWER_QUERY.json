@@ -1,0 +1,59 @@
+{
+	"name": "ETL_POWER_QUERY",
+	"properties": {
+		"activities": [
+			{
+				"name": "EXEC_PowerQuery",
+				"type": "ExecuteWranglingDataflow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "powerquery1",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"UserQuerydsgenericazuresql": {
+								"schemaName": "SalesLT",
+								"tableName": "ClienteCustomizado"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"queries": [
+						{
+							"queryName": "UserQuery",
+							"dataflowSinks": [
+								{
+									"name": "UserQuerydsgenericazuresql",
+									"dataset": {
+										"referenceName": "ds_generic_azuresql",
+										"type": "DatasetReference",
+										"parameters": {
+											"schemaName": "SalesLT",
+											"tableName": "ClienteCustomizado"
+										}
+									},
+									"script": "sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tdeletable:false,\n\tinsertable:true,\n\tupdateable:false,\n\tupsertable:false,\n\tformat: 'table',\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\terrorHandlingOption: 'stopOnFirstError') ~> UserQuerydsgenericazuresql"
+								}
+							]
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "PIPELINES_ACTIVITIES"
+		},
+		"annotations": []
+	}
+}
