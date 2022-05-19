@@ -1,0 +1,64 @@
+{
+	"name": "ETL_STORED_PROCEDURE",
+	"properties": {
+		"activities": [
+			{
+				"name": "SP_UPDATE_DATA",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[SalesLT].[proc_activity_adf01_in]"
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_azure_sql_datatabase",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "SP_UPDATE_STATUS",
+				"type": "SqlServerStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "SP_UPDATE_DATA",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[SalesLT].[proc_activity_adf02_in]",
+					"storedProcedureParameters": {
+						"preco": {
+							"value": "55",
+							"type": "Decimal"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "ls_azure_sql_datatabase",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
+		"folder": {
+			"name": "PIPELINES_ACTIVITIES"
+		},
+		"annotations": []
+	}
+}
