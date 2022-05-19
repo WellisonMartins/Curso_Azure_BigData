@@ -1,0 +1,21 @@
+{
+	"name": "ds_generic_fileserver",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_file_server",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
