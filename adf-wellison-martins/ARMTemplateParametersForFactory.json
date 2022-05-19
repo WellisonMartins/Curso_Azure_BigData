@@ -1,0 +1,42 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adf-wellison-martins"
+		},
+		"ls_azure_sql_database_powerquery_connectionString": {
+			"value": ""
+		},
+		"ls_sql_server1_connectionString": {
+			"value": ""
+		},
+		"ls_sql_server1_password": {
+			"value": ""
+		},
+		"ls_api_new_york_times_properties_typeProperties_url": {
+			"value": "https://api.nytimes.com/svc/movies/v2/"
+		},
+		"ls_azure_key_vault_properties_typeProperties_baseUrl": {
+			"value": "https://kv-wellison-martins.vault.azure.net/"
+		},
+		"ls_azure_sql_datatabase_properties_typeProperties_connectionString_secretName": {
+			"value": "secret-db-azure"
+		},
+		"ls_data_lake_properties_typeProperties_url": {
+			"value": "https://dlswellisonmartins.dfs.core.windows.net"
+		},
+		"ls_file_server_properties_typeProperties_host": {
+			"value": "C:\\adf"
+		},
+		"ls_file_server_properties_typeProperties_userId": {
+			"value": "BlueShift"
+		},
+		"ls_sql_server1_properties_typeProperties_userName": {
+			"value": "BlueShift"
+		},
+		"TR_LAKE_properties_typeProperties_scope": {
+			"value": "/subscriptions/681df4f6-acb7-4749-93ac-26607806a00b/resourceGroups/rg-wellison-martins/providers/Microsoft.Storage/storageAccounts/dlswellisonmartins"
+		}
+	}
+}

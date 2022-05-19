@@ -1,0 +1,139 @@
+{
+	"$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"type": "string",
+			"metadata": "Data Factory name",
+			"defaultValue": "adf-wellison-martins"
+		},
+		"ls_azure_sql_database_powerquery_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_azure_sql_database_powerquery'"
+		},
+		"ls_sql_server1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'ls_sql_server1'"
+		},
+		"ls_sql_server1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'ls_sql_server1'"
+		},
+		"ls_api_new_york_times_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://api.nytimes.com/svc/movies/v2/"
+		},
+		"ls_azure_key_vault_properties_typeProperties_baseUrl": {
+			"type": "string",
+			"defaultValue": "https://kv-wellison-martins.vault.azure.net/"
+		},
+		"ls_azure_sql_datatabase_properties_typeProperties_connectionString_secretName": {
+			"type": "string",
+			"defaultValue": "secret-db-azure"
+		},
+		"ls_data_lake_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://dlswellisonmartins.dfs.core.windows.net"
+		},
+		"ls_file_server_properties_typeProperties_host": {
+			"type": "string",
+			"defaultValue": "C:\\adf"
+		},
+		"ls_file_server_properties_typeProperties_userId": {
+			"type": "string",
+			"defaultValue": "BlueShift"
+		},
+		"ls_sql_server1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "BlueShift"
+		},
+		"TR_LAKE_properties_typeProperties_scope": {
+			"type": "string",
+			"defaultValue": "/subscriptions/681df4f6-acb7-4749-93ac-26607806a00b/resourceGroups/rg-wellison-martins/providers/Microsoft.Storage/storageAccounts/dlswellisonmartins"
+		},
+		"containerUri": {
+			"type": "string",
+			"metadata": "URI to storage account containing linked ARM templates"
+		},
+		"containerSasToken": {
+			"type": "string",
+			"metadata": "Sas token to storage account containing linked ARM templates"
+		}
+	},
+	"variables": {
+		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
+	},
+	"resources": [
+		{
+			"name": "adf-wellison-martins_ArmTemplate_0",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_0.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					},
+					"ls_azure_sql_database_powerquery_connectionString": {
+						"value": "[parameters('ls_azure_sql_database_powerquery_connectionString')]"
+					},
+					"ls_sql_server1_connectionString": {
+						"value": "[parameters('ls_sql_server1_connectionString')]"
+					},
+					"ls_sql_server1_password": {
+						"value": "[parameters('ls_sql_server1_password')]"
+					},
+					"ls_api_new_york_times_properties_typeProperties_url": {
+						"value": "[parameters('ls_api_new_york_times_properties_typeProperties_url')]"
+					},
+					"ls_azure_key_vault_properties_typeProperties_baseUrl": {
+						"value": "[parameters('ls_azure_key_vault_properties_typeProperties_baseUrl')]"
+					},
+					"ls_azure_sql_datatabase_properties_typeProperties_connectionString_secretName": {
+						"value": "[parameters('ls_azure_sql_datatabase_properties_typeProperties_connectionString_secretName')]"
+					},
+					"ls_data_lake_properties_typeProperties_url": {
+						"value": "[parameters('ls_data_lake_properties_typeProperties_url')]"
+					},
+					"ls_file_server_properties_typeProperties_host": {
+						"value": "[parameters('ls_file_server_properties_typeProperties_host')]"
+					},
+					"ls_file_server_properties_typeProperties_userId": {
+						"value": "[parameters('ls_file_server_properties_typeProperties_userId')]"
+					},
+					"ls_sql_server1_properties_typeProperties_userName": {
+						"value": "[parameters('ls_sql_server1_properties_typeProperties_userName')]"
+					},
+					"TR_LAKE_properties_typeProperties_scope": {
+						"value": "[parameters('TR_LAKE_properties_typeProperties_scope')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "adf-wellison-martins_ArmTemplate_1",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'adf-wellison-martins_ArmTemplate_0')]"
+			]
+		}
+	]
+}
