@@ -13,10 +13,34 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "ds_generic_delimited_text",
+						"type": "DatasetReference",
+						"parameters": {
+							"containerName": "raw",
+							"directoryName": "controller",
+							"fileName": "controller_tables.csv",
+							"separatorFile": ";"
+						}
+					},
+					"firstRowOnly": false
+				}
 			},
 			{
-				"name": "Lookup1_copy1",
+				"name": "Lookup csv singleton",
 				"type": "Lookup",
 				"dependsOn": [
 					{
@@ -33,14 +57,36 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "ds_generic_delimited_text2",
+						"type": "DatasetReference",
+						"parameters": {
+							"containerName": "transient",
+							"fileName": "cidades.csv",
+							"separatorFile": ";"
+						}
+					}
+				}
 			},
 			{
-				"name": "Lookup1_copy2",
+				"name": "Lookup table singleton",
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "Lookup1_copy1",
+						"activity": "Lookup csv singleton",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -53,14 +99,29 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_generic_azuresql",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "SalesLT",
+							"tableName": "TB_PlanCor"
+						}
+					}
+				}
 			},
 			{
-				"name": "Lookup1_copy1_copy1",
+				"name": "Lookup cav array",
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "Lookup1_copy2",
+						"activity": "Lookup table singleton",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -73,14 +134,36 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"dataset": {
+						"referenceName": "ds_generic_delimited_text2",
+						"type": "DatasetReference",
+						"parameters": {
+							"containerName": "transient",
+							"fileName": "cidades.csv",
+							"separatorFile": ";"
+						}
+					}
+				}
 			},
 			{
-				"name": "Lookup1_copy1_copy1_copy1",
+				"name": "Lookup table array",
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "Lookup1_copy1_copy1",
+						"activity": "Lookup cav array",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -93,14 +176,30 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_generic_dblocal",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "IMERSAO",
+							"tableName": "artista"
+						}
+					},
+					"firstRowOnly": false
+				}
 			},
 			{
-				"name": "Lookup1_copy1_copy1_copy1_copy1",
+				"name": "Lookup table array query",
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "Lookup1_copy1_copy1_copy1",
+						"activity": "Lookup table array",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -113,7 +212,23 @@
 					"secureOutput": false,
 					"secureInput": false
 				},
-				"userProperties": []
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT TABLE_SCHEMA, TABLE_NAME\nFROM INFORMATION_SCHEMA.TABLES \n  WHERE TABLE_TYPE='BASE TABLE'\n  and TABLE_SCHEMA = 'IMERSAO'",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_generic_dblocal",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "*",
+							"tableName": "*"
+						}
+					}
+				}
 			}
 		],
 		"folder": {
