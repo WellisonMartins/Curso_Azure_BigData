@@ -145,7 +145,7 @@
 											"type": "Expression"
 										},
 										"fileName": {
-											"value": "@item().file_target",
+											"value": "@concat(item().file_target,'.csv')",
 											"type": "Expression"
 										},
 										"separatorFile": ";"
