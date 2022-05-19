@@ -1,0 +1,79 @@
+{
+	"name": "DATAFLOW_ARTISTA",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_generic_delimited_text2",
+						"type": "DatasetReference"
+					},
+					"name": "sArtista"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_generic_delimited_text2",
+						"type": "DatasetReference"
+					},
+					"name": "sEventoArtista"
+				}
+			],
+			"sinks": [],
+			"transformations": [
+				{
+					"name": "renameArtista"
+				},
+				{
+					"name": "renameEventoArtista"
+				},
+				{
+					"name": "colunaCalculadaEventoArtista"
+				},
+				{
+					"name": "joinArtistaEventoArtista"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          COD_ARTISTA as short,",
+				"          CPF as long,",
+				"          NOME as string,",
+				"          COD_ESTILO as short",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false) ~> sArtista",
+				"source(output(",
+				"          CODIGO as short,",
+				"          VALOR_PGTO as double,",
+				"          DT_PGTO as string,",
+				"          FKCOD_ARTISTA as short,",
+				"          FKCOD_EVENTO as short",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false) ~> sEventoArtista",
+				"sArtista select(mapColumn(",
+				"          COD_ARTISTA,",
+				"          NOME_ARTISTA = NOME",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> renameArtista",
+				"sEventoArtista select(mapColumn(",
+				"          eaVALOR_PGTO = VALOR_PGTO,",
+				"          eaFKCOD_ARTISTA = FKCOD_ARTISTA,",
+				"          eaFKCOD_EVENTO = FKCOD_EVENTO",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> renameEventoArtista",
+				"renameEventoArtista derive(valorpgto_dobrado = eaVALOR_PGTO*2) ~> colunaCalculadaEventoArtista",
+				"renameArtista, colunaCalculadaEventoArtista join(COD_ARTISTA == eaFKCOD_ARTISTA,",
+				"     joinType:'left',",
+				"     broadcast: 'auto')~> joinArtistaEventoArtista"
+			]
+		}
+	}
+}
