@@ -1,0 +1,17 @@
+{
+	"name": "ls_sql_server1",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=True;data source=DESKTOP-G75CFMH\\SQLEXPRESS;initial catalog=EVENTOS",
+			"userName": "BlueShift",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI0ZWI3ZDczMi1jZGI5LTQwOTctOTQwNi1hNWY4MmVmYWExNWIiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "ir-wellisonmartins",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

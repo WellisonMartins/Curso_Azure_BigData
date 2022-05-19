@@ -1,0 +1,24 @@
+{
+	"name": "ls_file_server",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "FileServer",
+		"typeProperties": {
+			"host": "C:\\adf",
+			"userId": "BlueShift",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "ls_azure_key_vault",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "secret-user-local"
+			}
+		},
+		"connectVia": {
+			"referenceName": "ir-wellisonmartins",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

@@ -1,0 +1,11 @@
+{
+	"name": "ls_azure_key_vault",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://kv-wellison-martins.vault.azure.net/"
+		}
+	}
+}

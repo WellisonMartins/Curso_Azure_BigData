@@ -1,0 +1,20 @@
+{
+	"name": "powerquery1",
+	"properties": {
+		"type": "WranglingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"name": "ds_fixo_table_cliente",
+					"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tisolationLevel: 'READ_UNCOMMITTED',\n\tformat: 'table') ~>  ds_fixo_table_cliente",
+					"dataset": {
+						"referenceName": "ds_fixo_table_cliente",
+						"type": "DatasetReference"
+					}
+				}
+			],
+			"script": "section Section1;\r\nshared ds_fixo_table_cliente = let AdfDoc = Sql.Database(\"sql-wellison-martins.database.windows.net\", \"sqlbd-wellison-martins\", [CreateNavigationProperties = false]), InputTable = AdfDoc{[Schema=\"SalesLT\",Item=\"Customer\"]}[Data] in InputTable;\r\nshared UserQuery = let Source = #\"ds_fixo_table_cliente\",\r\n  #\"Removed columns\" = Table.RemoveColumns(Source, {\"PasswordHash\", \"Phone\", \"SalesPerson\", \"Suffix\", \"MiddleName\", \"NameStyle\", \"Title\"}),\r\n  #\"Added custom\" = Table.AddColumn(#\"Removed columns\", \"NomeCompleto\", each [FirstName] & \" \" & [LastName]) in #\"Added custom\";\r\n",
+			"documentLocale": "en-us"
+		}
+	}
+}

@@ -1,0 +1,124 @@
+{
+	"name": "DATAFLOW_ARTISTA",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ds_generic_delimited_text2",
+						"type": "DatasetReference"
+					},
+					"name": "sArtista"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_generic_delimited_text2",
+						"type": "DatasetReference"
+					},
+					"name": "sEventoArtista"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_generic_azuresql",
+						"type": "DatasetReference"
+					},
+					"name": "sinkSQL"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_generic_parquet_dataflow",
+						"type": "DatasetReference"
+					},
+					"name": "sinkCSV"
+				}
+			],
+			"transformations": [
+				{
+					"name": "renameArtista"
+				},
+				{
+					"name": "renameEventoArtista"
+				},
+				{
+					"name": "colunaCalculadaEventoArtista"
+				},
+				{
+					"name": "joinArtistaEventoArtista"
+				},
+				{
+					"name": "groupbyValorPgtoArtista"
+				},
+				{
+					"name": "split1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          COD_ARTISTA as short,",
+				"          CPF as long,",
+				"          NOME as string,",
+				"          COD_ESTILO as short",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false) ~> sArtista",
+				"source(output(",
+				"          CODIGO as short,",
+				"          VALOR_PGTO as double,",
+				"          DT_PGTO as string,",
+				"          FKCOD_ARTISTA as short,",
+				"          FKCOD_EVENTO as short",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     inferDriftedColumnTypes: true,",
+				"     ignoreNoFilesFound: false) ~> sEventoArtista",
+				"sArtista select(mapColumn(",
+				"          COD_ARTISTA,",
+				"          NOME_ARTISTA = NOME",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> renameArtista",
+				"sEventoArtista select(mapColumn(",
+				"          eaVALOR_PGTO = VALOR_PGTO,",
+				"          eaFKCOD_ARTISTA = FKCOD_ARTISTA,",
+				"          eaFKCOD_EVENTO = FKCOD_EVENTO",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> renameEventoArtista",
+				"renameEventoArtista derive(valorpgto_dobrado = eaVALOR_PGTO*2) ~> colunaCalculadaEventoArtista",
+				"renameArtista, colunaCalculadaEventoArtista join(COD_ARTISTA == eaFKCOD_ARTISTA,",
+				"     joinType:'left',",
+				"     broadcast: 'auto')~> joinArtistaEventoArtista",
+				"joinArtistaEventoArtista aggregate(groupBy(NOME_ARTISTA),",
+				"     faturamento_total = sum(valorpgto_dobrado)) ~> groupbyValorPgtoArtista",
+				"groupbyValorPgtoArtista split(faturamento_total > 200000,",
+				"     disjoint: false) ~> split1@(sinkSQL, sinkCSV)",
+				"split1@sinkSQL sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkSQL",
+				"split1@sinkCSV sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     partitionFileNames:['faturamento_negativo.parquet'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sinkCSV"
+			]
+		}
+	}
+}

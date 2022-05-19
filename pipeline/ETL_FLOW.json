@@ -1,0 +1,54 @@
+{
+	"name": "ETL_FLOW",
+	"properties": {
+		"activities": [
+			{
+				"name": "Exec Data Flow",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "1.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "DATAFLOW_ARTISTA",
+						"type": "DataFlowReference",
+						"datasetParameters": {
+							"sArtista": {
+								"containerName": "bronze",
+								"fileName": "artista.csv",
+								"separatorFile": ";"
+							},
+							"sEventoArtista": {
+								"containerName": "bronze",
+								"fileName": "evento_artista.csv",
+								"separatorFile": ";"
+							},
+							"sinkSQL": {
+								"schemaName": "SalesLT",
+								"tableName": "faturamento_positivo_artista"
+							},
+							"sinkCSV": {
+								"containerName": "trusted"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"folder": {
+			"name": "PIPELINES_ACTIVITIES"
+		},
+		"annotations": []
+	}
+}

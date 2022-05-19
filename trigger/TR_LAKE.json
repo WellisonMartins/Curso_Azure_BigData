@@ -1,0 +1,26 @@
+{
+	"name": "TR_LAKE",
+	"properties": {
+		"annotations": [],
+		"runtimeState": "Started",
+		"pipelines": [
+			{
+				"pipelineReference": {
+					"referenceName": "TRIGGER_STORAGE_EVENTS",
+					"type": "PipelineReference"
+				}
+			}
+		],
+		"type": "BlobEventsTrigger",
+		"typeProperties": {
+			"blobPathBeginsWith": "/raw/blobs/",
+			"blobPathEndsWith": ".csv",
+			"ignoreEmptyBlobs": true,
+			"scope": "/subscriptions/681df4f6-acb7-4749-93ac-26607806a00b/resourceGroups/rg-wellison-martins/providers/Microsoft.Storage/storageAccounts/dlswellisonmartins",
+			"events": [
+				"Microsoft.Storage.BlobDeleted",
+				"Microsoft.Storage.BlobCreated"
+			]
+		}
+	}
+}
