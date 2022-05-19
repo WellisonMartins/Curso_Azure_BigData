@@ -1,9 +1,9 @@
 {
-	"name": "pipeline1",
+	"name": "COPY_COPYDATAAPI",
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "API_TO_DATALAKE",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
