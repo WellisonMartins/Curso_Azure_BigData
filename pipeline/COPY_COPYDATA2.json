@@ -1,0 +1,206 @@
+{
+	"name": "COPY_COPYDATA2",
+	"properties": {
+		"activities": [
+			{
+				"name": "SQL_TO_SQL",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "AzureSqlSink",
+						"writeBehavior": "upsert",
+						"upsertSettings": {
+							"useTempDB": true,
+							"keys": [
+								"id"
+							]
+						},
+						"sqlWriterUseTableLock": false,
+						"disableMetricsCollection": false
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_generic_azuresql",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "SalesLT",
+							"tableName": "TB_ADF_COPY_SOURCE"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_generic_azuresql",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "SalesLT",
+							"tableName": "TB_ADF_COPY_TARGET"
+						}
+					}
+				]
+			},
+			{
+				"name": "COPYSQL_TO_DATALAKE",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "SQL_TO_SQL",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT* FROM [SalesLT].[TB_ADF_COPY_TARGET]",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_generic_azuresql",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "*",
+							"tableName": "*"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_generic_delimited_text2",
+						"type": "DatasetReference",
+						"parameters": {
+							"containerName": "raw",
+							"fileName": "COPY_TARGET.CSV",
+							"separatorFile": ";"
+						}
+					}
+				]
+			},
+			{
+				"name": "COPYSQLLOCAL_TO_DATALAKE",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT [COD_LOCAL]\n      ,[NOME]\n      ,[CIDADE]\n      ,[BAIRRO]\n      ,[ESTADO]\n  FROM [EVENTOS].[IMERSAO].[LOCALIZACAO]\n  WHERE ESTADO = 'PE'",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ds_generic_dblocal",
+						"type": "DatasetReference",
+						"parameters": {
+							"schemaName": "*",
+							"tableName": "*"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ds_generic_delimited_text2",
+						"type": "DatasetReference",
+						"parameters": {
+							"containerName": "raw",
+							"fileName": {
+								"value": "@concat('localizacao',formatDateTime(utcnow(), 'yyyy-MM-dd'))",
+								"type": "Expression"
+							},
+							"separatorFile": ";"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "PIPELINES_ACTIVITIES"
+		},
+		"annotations": []
+	}
+}
