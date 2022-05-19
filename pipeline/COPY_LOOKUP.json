@@ -1,0 +1,124 @@
+{
+	"name": "COPY_LOOKUP",
+	"properties": {
+		"activities": [
+			{
+				"name": "Lookup Controller",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
+			},
+			{
+				"name": "Lookup1_copy1",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Lookup Controller",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
+			},
+			{
+				"name": "Lookup1_copy2",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Lookup1_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
+			},
+			{
+				"name": "Lookup1_copy1_copy1",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Lookup1_copy2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
+			},
+			{
+				"name": "Lookup1_copy1_copy1_copy1",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Lookup1_copy1_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
+			},
+			{
+				"name": "Lookup1_copy1_copy1_copy1_copy1",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Lookup1_copy1_copy1_copy1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": []
+			}
+		],
+		"folder": {
+			"name": "PIPELINES_ACTIVITIES"
+		},
+		"annotations": []
+	}
+}
