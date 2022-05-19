@@ -101,8 +101,63 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"enableStaging": false
-							}
+								"source": {
+									"type": "DelimitedTextSource",
+									"storeSettings": {
+										"type": "AzureBlobFSReadSettings",
+										"recursive": true,
+										"enablePartitionDiscovery": false
+									},
+									"formatSettings": {
+										"type": "DelimitedTextReadSettings"
+									}
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "ds_generic_delimited_text2",
+									"type": "DatasetReference",
+									"parameters": {
+										"containerName": "transient",
+										"fileName": {
+											"value": "@item().name",
+											"type": "Expression"
+										},
+										"separatorFile": ";"
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ds_generic_parquet",
+									"type": "DatasetReference",
+									"parameters": {
+										"containerName": "raw",
+										"fileName": {
+											"value": "@replace(item().name, '.txt', '')",
+											"type": "Expression"
+										}
+									}
+								}
+							]
 						}
 					]
 				}
