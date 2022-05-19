@@ -117,7 +117,7 @@
 				}
 			},
 			{
-				"name": "Lookup cav array",
+				"name": "Lookup csv array",
 				"type": "Lookup",
 				"dependsOn": [
 					{
@@ -163,7 +163,7 @@
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "Lookup cav array",
+						"activity": "Lookup csv array",
 						"dependencyConditions": [
 							"Succeeded"
 						]
