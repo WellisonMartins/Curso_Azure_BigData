@@ -1,0 +1,100 @@
+{
+	"name": "COPY_SCRIPT",
+	"properties": {
+		"activities": [
+			{
+				"name": "DROP_TABLE_IF_EXISTS",
+				"type": "Script",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "ls_azure_sql_datatabase",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "IF OBJECT_ID(N'SalesLT.TB_ADF_SCRIPT_ACTIVITY', N'U') IS NOT NULL  \n\nDROP TABLE [SalesLT].[TB_ADF_SCRIPT_ACTIVITY];"
+						}
+					]
+				}
+			},
+			{
+				"name": "SELECT_INTO",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "DROP_TABLE_IF_EXISTS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "ls_azure_sql_datatabase",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "NonQuery",
+							"text": "Select * \ninto SalesLT.TB_ADF_SCRIPT_ACTIVITY\nfrom SalesLT.Customer"
+						}
+					]
+				}
+			},
+			{
+				"name": "SELECT_TABLE",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "SELECT_INTO",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "ls_azure_sql_datatabase",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "select *\nfrom [SalesLT].[TB_ADF_SCRIPT_ACTIVITY]"
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "PIPELINES_ACTIVITIES"
+		},
+		"annotations": []
+	}
+}
