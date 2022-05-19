@@ -1,0 +1,66 @@
+{
+	"name": "pipeline1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Copy data1",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "JsonSource",
+						"storeSettings": {
+							"type": "HttpReadSettings",
+							"requestMethod": "GET"
+						},
+						"formatSettings": {
+							"type": "JsonReadSettings"
+						}
+					},
+					"sink": {
+						"type": "JsonSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "JsonWriteSettings"
+						}
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "json_movies",
+						"type": "DatasetReference",
+						"parameters": {
+							"tokenApi": "sY9KTeKv2CdlmCS72ETTdYbnPGpFhUuS",
+							"relativeURL": "critics/all.json?"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "json_generic_api",
+						"type": "DatasetReference",
+						"parameters": {
+							"containerName": "raw",
+							"fileName": "criticas_filmes"
+						}
+					}
+				]
+			}
+		],
+		"folder": {
+			"name": "PIPELINES_ACTIVITIES"
+		},
+		"annotations": []
+	}
+}
