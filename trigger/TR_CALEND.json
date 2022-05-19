@@ -9,6 +9,12 @@
 					"referenceName": "TRIGGER_SCHEDULE",
 					"type": "PipelineReference"
 				}
+			},
+			{
+				"pipelineReference": {
+					"referenceName": "ORQUESTRADOR",
+					"type": "PipelineReference"
+				}
 			}
 		],
 		"type": "ScheduleTrigger",
