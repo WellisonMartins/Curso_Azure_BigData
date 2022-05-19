@@ -22,7 +22,7 @@
 			"recurrence": {
 				"frequency": "Minute",
 				"interval": 15,
-				"startTime": "2022-05-18T20:25:00",
+				"startTime": "2022-05-18T20:30:00",
 				"timeZone": "E. South America Standard Time"
 			}
 		}
