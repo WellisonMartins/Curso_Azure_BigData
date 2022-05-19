@@ -20,7 +20,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"containerName": "transient",
-							"fileName": "cidade.csv",
+							"fileName": "cidades.csv",
 							"separatorFile": ";"
 						}
 					},
@@ -39,7 +39,14 @@
 			{
 				"name": "Get Metadata FILE2",
 				"type": "GetMetadata",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Get Metadata FILE",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -77,7 +84,14 @@
 			{
 				"name": "Get Metadata FOLDER",
 				"type": "GetMetadata",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Get Metadata FILE2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
@@ -121,7 +135,14 @@
 			{
 				"name": "Get Metadata TABLE",
 				"type": "GetMetadata",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Get Metadata FOLDER",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "7.00:00:00",
 					"retry": 0,
