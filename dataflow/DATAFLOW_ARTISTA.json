@@ -19,7 +19,22 @@
 					"name": "sEventoArtista"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ds_generic_azuresql",
+						"type": "DatasetReference"
+					},
+					"name": "sinkSQL"
+				},
+				{
+					"dataset": {
+						"referenceName": "ds_generic_parquet_dataflow",
+						"type": "DatasetReference"
+					},
+					"name": "sinkCSV"
+				}
+			],
 			"transformations": [
 				{
 					"name": "renameArtista"
@@ -32,6 +47,12 @@
 				},
 				{
 					"name": "joinArtistaEventoArtista"
+				},
+				{
+					"name": "groupbyValorPgtoArtista"
+				},
+				{
+					"name": "split1"
 				}
 			],
 			"scriptLines": [
@@ -72,7 +93,31 @@
 				"renameEventoArtista derive(valorpgto_dobrado = eaVALOR_PGTO*2) ~> colunaCalculadaEventoArtista",
 				"renameArtista, colunaCalculadaEventoArtista join(COD_ARTISTA == eaFKCOD_ARTISTA,",
 				"     joinType:'left',",
-				"     broadcast: 'auto')~> joinArtistaEventoArtista"
+				"     broadcast: 'auto')~> joinArtistaEventoArtista",
+				"joinArtistaEventoArtista aggregate(groupBy(NOME_ARTISTA),",
+				"     faturamento_total = sum(valorpgto_dobrado)) ~> groupbyValorPgtoArtista",
+				"groupbyValorPgtoArtista split(faturamento_total > 200000,",
+				"     disjoint: false) ~> split1@(sinkSQL, sinkCSV)",
+				"split1@sinkSQL sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     format: 'table',",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sinkSQL",
+				"split1@sinkCSV sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     partitionFileNames:['faturamento_negativo.parquet'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> sinkCSV"
 			]
 		}
 	}
