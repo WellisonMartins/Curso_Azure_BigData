@@ -1,6 +1,78 @@
 {
 	"name": "COPY_GETMETADATA_FOREACH_FILTER",
 	"properties": {
+		"activities": [
+			{
+				"name": "Files_transient",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ds_generic_delimited_text",
+						"type": "DatasetReference",
+						"parameters": {
+							"containerName": "transient",
+							"directoryName": {
+								"value": "@toLower('')",
+								"type": "Expression"
+							},
+							"fileName": {
+								"value": "@toLower('')",
+								"type": "Expression"
+							},
+							"separatorFile": {
+								"value": "@toLower('')",
+								"type": "Expression"
+							}
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "DelimitedTextReadSettings"
+					}
+				}
+			},
+			{
+				"name": "Filter_txt",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Files_transient",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Files_transient').output.childItems",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@contains(item().name, '.txt')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"folder": {
+			"name": "PIPELINES_ACTIVITIES"
+		},
 		"annotations": []
 	}
 }
